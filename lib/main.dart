@@ -148,6 +148,12 @@ class _MyHomePageState extends State<MyHomePage> {
       debugPrint("Can't Launch Url. ");
     }
   }
+  _createPdfEncrypted(Directory d,filename) async {
+    Uint8List encData = await _readData(d.path + '/$filename');
+    var encResult = _encryptData(encData);
+    String p = await _writeData(encResult, d.path + '/$filename.aes');
+    debugPrint("file encrypted successfully : $p");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -172,6 +178,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () async {
                   if (_isGranted) {
                     Directory d = await getExternalVisibleDir;
+                    _getNormalFile(d, fileName);
+                  } else {
+                    debugPrint("No Permission granted");
+                    requestStoragePermission();
+                  }
+                },
+                child: const Text('decrypt through storage file')),
+            OutlinedButton(
+                onPressed: () async {
+                  if (_isGranted) {
+                    Directory d = await getExternalVisibleDir;
                     _getNewNormalFile(newPdfUrl, d, fileName);
                   } else {
                     debugPrint("No Permission granted");
@@ -183,13 +200,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () async {
                   if (_isGranted) {
                     Directory d = await getExternalVisibleDir;
-                    _getNormalFile(d, fileName);
+                    _createPdfEncrypted(d, fileName);
                   } else {
                     debugPrint("No Permission granted");
                     requestStoragePermission();
                   }
                 },
-                child: const Text('Download & Decrypt')),
+                child: const Text('Encrypt through storage file')),
           ],
         ),
       ),
