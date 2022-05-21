@@ -148,7 +148,8 @@ class _MyHomePageState extends State<MyHomePage> {
       debugPrint("Can't Launch Url. ");
     }
   }
-  _createPdfEncrypted(Directory d,filename) async {
+
+  _createPdfEncrypted(Directory d, filename) async {
     Uint8List encData = await _readData(d.path + '/$filename');
     var encResult = _encryptData(encData);
     String p = await _writeData(encResult, d.path + '/$filename.aes');
